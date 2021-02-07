@@ -1,0 +1,25 @@
+import youtubedl from "youtube-dl";
+
+const getInfo = async (req, res) => {
+  const url = req.body.url;
+
+  youtubedl.getInfo(url, function (err, info) {
+    if (err) {
+      console.error(err);
+    } else {
+      const mediaInfo = {
+        filesize: info.filesize,
+        id: info.id,
+        title: info.title,
+        url: info.url,
+        thumbnail: info.thumbnail,
+        description: info.description,
+        filename: info._filename,
+        format_id: info.format_id,
+      };
+      res.send(mediaInfo);
+    }
+  });
+};
+
+export { getInfo };
