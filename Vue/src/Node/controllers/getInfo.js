@@ -8,6 +8,7 @@ const getInfo = async (req, res) => {
       console.error(err);
     } else {
       const mediaInfo = {
+        formats: info.formats,
         filesize: info.filesize,
         id: info.id,
         title: info.title,
@@ -15,7 +16,7 @@ const getInfo = async (req, res) => {
         thumbnail: info.thumbnail,
         description: info.description,
         filename: info._filename,
-        format_id: info.format_id,
+        formatID: info.format_id,
       };
       res.send(mediaInfo);
     }

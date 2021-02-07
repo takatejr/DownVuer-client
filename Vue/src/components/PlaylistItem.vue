@@ -1,41 +1,81 @@
 <template>
-  <div v-for="(item, index) in items" :key="index" class="download">
-    <p class="title" v-if="item.binary !== ''">
-      {{ item.details.title }}
-    </p>
-    <div class="media" v-if="item.binary !== ''">
-      <img class="img" :src="item.details.thumbnail" alt="thumbnail" />
-      <p class="desc">{{ item.details.description }}</p>
-    </div>
-    <div class="buttons" v-if="item.binary !== ''">
-      <a
-        class="button is-danger btn"
-        :href="`${item.binary}`"
-        :download="`${item.details.title}` + '.mp3'"
+  <div>
+    <div v-for="(item, index) in items" :key="index" class="download">
+      <p class="title">
+        {{ item.details.title }}
+      </p>
+      <div class="media">
+        <img class="img" :src="item.details.thumbnail" alt="thumbnail" />
+        <p class="desc">{{ item.details.description }}</p>
+      </div>
+      <div class="buttons" v-if="item.path === ''">
+        <a
+          class="button is-danger btn"
+          :download="`${item.details.title}` + '.mp3'"
+        >
+          Download
+        </a>
+        <a
+          class="button is-small is-1 is-offset-1 btn"
+          @click="deleteItem(index)"
+          >Delete</a
+        >
+      </div>
+      <label for="format" class="is-2 label">Media format</label>
+      <select
+        name="format"
+        id="format"
+        class="select input"
+        v-model="formValues.selectedFormat"
       >
-        Download
-      </a>
-      <a class="button is-small is-1 is-offset-1 btn" @click="deleteItem(index)"
-        >Delete</a
+        <option disabled>Choose format</option>
+        <option
+          v-for="format in item.formats"
+          :key="format.format"
+          v-bind:value="format.format"
+        >
+          {{ format.text }} - {{ format.type }} -
+          {{ format.filesize }}
+        </option>
+      </select>
+      <button
+        @click="download(formValues.selectedFormat)"
+        class="submit__item button is-2 is-offset-5"
+        v-bind:disabled="formValues.selectedFormat === ''"
       >
+        Submit
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import store from "../store/index";
 
 export default {
   name: "PlaylistItem",
   data() {
     return {
-      items: store.state.youtubeMedia,
+      items: store.state.currentInfo,
+      formValues: {
+        selectedFormat: "",
+        isDisabled: false,
+      },
     };
   },
   methods: {
     deleteItem(index) {
+      // axios.post('http://localhost:3000/api/delete/:id')
       return store.state.youtubeMedia.splice(index, 1);
     },
+
+    downloadMedia(format) {
+      store.dispatch("downloadedMedia", format);
+    },
+  },
+  setup() {
+    store.state.youtubeMedia.pop();
   },
 };
 </script>
