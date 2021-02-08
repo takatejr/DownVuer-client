@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(item, index) in items" :key="index" class="download">
+    <div v-for="(item, index) in youtubeMedia" :key="index" class="download">
       <p class="title">
         {{ item.details.title }}
       </p>
@@ -8,7 +8,7 @@
         <img class="img" :src="item.details.thumbnail" alt="thumbnail" />
         <p class="desc">{{ item.details.description }}</p>
       </div>
-      <div class="buttons" v-if="item.path === ''">
+      <div class="buttons" v-if="item.path !== ''">
         <a
           class="button is-danger btn"
           :download="`${item.details.title}` + '.mp3'"
@@ -27,6 +27,7 @@
         id="format"
         class="select input"
         v-model="formValues.selectedFormat"
+        :disabled="formValues.isDisabled"
       >
         <option disabled>Choose format</option>
         <option
@@ -39,7 +40,7 @@
         </option>
       </select>
       <button
-        @click="download(formValues.selectedFormat)"
+        @click="downloadMedia(formValues.selectedFormat, index)"
         class="submit__item button is-2 is-offset-5"
         v-bind:disabled="formValues.selectedFormat === ''"
       >
@@ -50,14 +51,13 @@
 </template>
 
 <script>
-import axios from "axios";
 import store from "../store/index";
 
 export default {
   name: "PlaylistItem",
   data() {
     return {
-      items: store.state.currentInfo,
+      youtubeMedia: store.state.youtubeMedia,
       formValues: {
         selectedFormat: "",
         isDisabled: false,
@@ -70,13 +70,13 @@ export default {
       return store.state.youtubeMedia.splice(index, 1);
     },
 
-    downloadMedia(format) {
-      store.dispatch("downloadedMedia", format);
+    downloadMedia(format, index) {
+      store.dispatch("downloadMedia", { format, index });
     },
   },
   setup() {
     store.state.youtubeMedia.pop();
-  },
+  }
 };
 </script>
 

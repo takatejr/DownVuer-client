@@ -1,8 +1,8 @@
+import axios, { AxiosResponse } from "axios";
 import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    count: 0,
     isDisabled: false,
     currentInfo: {},
     currentFormats: [{
@@ -18,29 +18,44 @@ export default createStore({
   mutations: {
   }, //commit
   actions: {
-    setInfo({ state }, data) {
-      state.currentInfo = data
-      state.currentFormats = data.formats.map((e: any) => {
-        return {
-          format: e.format,
-          type: e.format.split(' ')[2] + e.format.split(' ')[3],
-          filesize: `${(Number(e.filesize) / 1000000).toFixed(1)}Mb`,
-          text: e.format.split(' ')[2] === "audio" ? "mp3" : "mp4",
-        }
-      })
-      console.log(state.currentInfo)
-      console.log(state.currentFormats)
-    },
-
     isDisabled({ state }, boolean) {
       state.isDisabled = boolean
     },
 
-    downloadedMedia({ state }, path) {
-      const details = state.currentInfo;
-      const formats = state.currentFormats;
+    setInfo({ state }, url) {
+      const path = "emptyForNow";
 
-      state.youtubeMedia.push({ details, path, formats })
+      axios
+        .post("http://localhost:3000/api/info", {
+          url: url
+        })
+        .then((res: AxiosResponse) => {
+          const formats = res.data.formats.map((e: any) => {
+            return {
+              format: e.format,
+              type: e.format.split(' ')[2] + e.format.split(' ')[3],
+              filesize: `${(Number(e.filesize) / 1000000).toFixed(1)}Mb`,
+              text: e.format.split(' ')[2] === "audio" ? "mp3" : "mp4",
+            }
+          })
+
+          state.youtubeMedia.push({ path: path, details: res.data, formats: formats })
+        })
+        .catch((error: unknown) => {
+          console.error("There was an error!", error);
+        });
+    },
+
+    downloadMedia({ state }, info) {
+      const { format, index } = info
+      axios
+        .post('http://localhost:3000/api/path', { format: format })
+        .then((res: AxiosResponse) => {
+          state.youtubeMedia[index].path = res.data
+        })
+        .catch((error: unknown) => {
+          console.error("There was an error!", error);
+        });
     }
 
   }, //dispatch

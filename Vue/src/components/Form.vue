@@ -16,7 +16,7 @@
   </form>
   <div class="submit">
     <button
-      @click="download(formValues.url)"
+      @click="setInfo(formValues.url)"
       class="submit__item button is-2 is-offset-5"
       v-bind:disabled="formValues.url === ''"
     >
@@ -26,7 +26,6 @@
 </template>
 
 <script lang="ts">
-import axios, { AxiosResponse } from "axios";
 import store from "../store/index";
 
 export default {
@@ -36,33 +35,15 @@ export default {
       formValues: {
         url: "",
         selectedFormat: "",
-        isDisabled: false,
+        isDisabled: false
       }
     };
   },
   methods: {
-    download(youtubeURL: string) {
-      console.log(youtubeURL);
-      if (!youtubeURL) {
-        window.alert("URL is empty");
-        return;
-      }
-      axios
-        .post("http://localhost:3000/api/info", {
-          url: youtubeURL,
-        })
-        .then((res: AxiosResponse) => {
-          console.log(res.data);
-          store.dispatch("setInfo", res.data);
-          // store.dispatch("downloadedMedia", "hehe");
-          // console.log(store.state.youtubeMedia)
-          // console.log(store.state.currentInfo);
-        })
-        .catch((error: unknown) => {
-          console.error("There was an error!", error);
-        });
-    },
-  },
+    setInfo(youtubeURL: string) {
+      store.dispatch("setInfo", youtubeURL);
+    }
+  }
 };
 </script>
 
