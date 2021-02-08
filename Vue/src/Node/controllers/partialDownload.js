@@ -5,7 +5,8 @@ import path from "path";
 const partialDownload = async (req, res) => {
   const url = req.body.url;
   const format = req.body.format;
-
+  console.log(url, format);
+  
   youtubedl.getInfo(url, function(err, info) {
     let downloaded = 0;
     const outputTitle = `${info.title}` + ".mp3";
@@ -21,11 +22,12 @@ const partialDownload = async (req, res) => {
       downloaded = fs.statSync(outputTitle).size;
     }
 
-      video.pipe(fs.createWriteStream(outputTitle));
+    video.pipe(fs.createWriteStream(outputTitle));
 
     video.on("end", () => {
       try {
-        res.send(outputTitle);
+        res.setHeader("Content-Type", "text/plain");
+        res.status(200).send(outputTitle);
         console.log("finished downloading, streaming now!");
         console.log("");
       } catch (error) {
@@ -33,14 +35,14 @@ const partialDownload = async (req, res) => {
       }
     });
 
-    video.on("end", () => {
-      fs.unlink(filePath, (err) => {
-        console.log("usuwam");
-        if (err) {
-          console.error(err);
-        }
-      });
-    });
+    // video.on("end", () => {
+    //   fs.unlink(filePath, (err) => {
+    //     console.log("usuwam");
+    //     if (err) {
+    //       console.error(err);
+    //     }
+    //   });
+    // });
   });
 };
 

@@ -9,12 +9,27 @@
         <p class="desc">{{ item.details.description }}</p>
       </div>
       <div class="buttons" v-if="item.path !== ''">
-        <a
+        <!-- <a
           class="button is-danger btn"
           :download="`${item.details.title}` + '.mp3'"
         >
           Download
-        </a>
+        </a> -->
+        <audio
+          controls="true"
+          preload="auto"
+          v-if="item.path !== 'emptyForNow'"
+          download="hseuhseu.mp3"
+        >
+          <source src="../Node/RUSK.mp3" type="audio/mpeg" download="eeeeee.mp3"/>
+          <!-- <source src="../assets/ue.mp3" type="audio/mpeg" /> -->
+        </audio>
+        <audio 
+                  controls="true"
+          preload="auto"
+        >
+        <source src="../Node/RUSK.mp3" download="eeeee.mp3"/>
+        </audio>
         <a
           class="button is-small is-1 is-offset-1 btn"
           @click="deleteItem(index)"
@@ -40,7 +55,7 @@
         </option>
       </select>
       <button
-        @click="downloadMedia(formValues.selectedFormat, index)"
+        @click="downloadMedia(formValues.selectedFormat, index, item.url)"
         class="submit__item button is-2 is-offset-5"
         v-bind:disabled="formValues.selectedFormat === ''"
       >
@@ -70,13 +85,13 @@ export default {
       return store.state.youtubeMedia.splice(index, 1);
     },
 
-    downloadMedia(format, index) {
-      store.dispatch("downloadMedia", { format, index });
+    downloadMedia(format, index, url) {
+      store.dispatch("downloadMedia", { format, index, url });
     },
   },
   setup() {
     store.state.youtubeMedia.pop();
-  }
+  },
 };
 </script>
 
