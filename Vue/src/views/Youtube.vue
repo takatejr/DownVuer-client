@@ -3,6 +3,9 @@
   <div class="playlist">
     <PlaylistItem></PlaylistItem>
   </div>
+  <!-- <audio controls="true" preload="auto" download="hseuhseu.mp3"> -->
+  <!-- <source src="../assets/ue.mp3" type="audio/mpeg" download="hseuhseu.mp3"> -->
+  <!-- </audio> -->
 </template>
 
 <script lang="ts">

@@ -9,8 +9,7 @@ const partialDownload = async (req, res) => {
   
   youtubedl.getInfo(url, function(err, info) {
     let downloaded = 0;
-    const outputTitle = `${info.title}` + ".mp3";
-    const filePath = path.join(outputTitle);
+    const outputTitle = `${info.title}.mp3`.replace(/\s/g, '');
     const video = youtubedl(url, [`--format=${format}`], { start: downloaded });
 
     video.on("info", function(info) {
@@ -30,19 +29,20 @@ const partialDownload = async (req, res) => {
         res.status(200).send(outputTitle);
         console.log("finished downloading, streaming now!");
         console.log("");
+
       } catch (error) {
         res.send({ message: error });
       }
     });
 
-    // video.on("end", () => {
-    //   fs.unlink(filePath, (err) => {
-    //     console.log("usuwam");
-    //     if (err) {
-    //       console.error(err);
-    //     }
-    //   });
-    // });
+    video.on("end", () => {
+      fs.unlink(filePath, (err) => {
+        console.log("usuwam");
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
   });
 };
 

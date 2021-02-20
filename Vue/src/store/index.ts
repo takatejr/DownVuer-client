@@ -50,6 +50,7 @@ export default createStore({
 
     downloadMedia({ state }, info) {
       const { format, index, url } = info
+      
       axios
         .post('http://localhost:3000/api/partial', { url: url, format: format })
         .then((res: AxiosResponse) => {

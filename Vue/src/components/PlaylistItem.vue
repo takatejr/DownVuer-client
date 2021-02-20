@@ -9,26 +9,8 @@
         <p class="desc">{{ item.details.description }}</p>
       </div>
       <div class="buttons" v-if="item.path !== ''">
-        <!-- <a
-          class="button is-danger btn"
-          :download="`${item.details.title}` + '.mp3'"
-        >
-          Download
-        </a> -->
-        <audio
-          controls="true"
-          preload="auto"
-          v-if="item.path !== 'emptyForNow'"
-          download="hseuhseu.mp3"
-        >
-          <source src="../Node/RUSK.mp3" type="audio/mpeg" download="eeeeee.mp3"/>
-          <!-- <source src="../assets/ue.mp3" type="audio/mpeg" /> -->
-        </audio>
-        <audio 
-                  controls="true"
-          preload="auto"
-        >
-        <source src="../Node/RUSK.mp3" download="eeeee.mp3"/>
+        <audio controls="true" v-once>
+          <source type="audio/mpeg" :src="`../Node/` + `${item.path}`" />
         </audio>
         <a
           class="button is-small is-1 is-offset-1 btn"
@@ -86,7 +68,7 @@ export default {
     },
 
     downloadMedia(format, index, url) {
-      store.dispatch("downloadMedia", { format, index, url });
+      store.dispatch("downloadMedia", { format, index, url })
     },
   },
   setup() {
