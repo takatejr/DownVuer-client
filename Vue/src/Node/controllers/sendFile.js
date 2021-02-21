@@ -1,18 +1,16 @@
 import path from "path";
-import fs from "fs";
+
+import { accessToStorage } from "../services/code.service.js";
 
 const sendFile = async (req, res) => {
-  if (req.params.code === code) {
+  if (accessToStorage.filter(x => x.code === req.params.code)) {
     const filePath = path.join(`/DownVuer/Vue/src/Node/${code.title}`);
 
-    fs.download(filePath, (err) => {
-      if (err) {
-        console.error(err);
-        res.status(400);
-      }
+    res.download(filePath, err => {
+      console.error(err + filePath);
     });
   } else {
-    res.status(401).send('Unauthorize connection')
+    res.status(401).send("Unauthorize connection");
   }
 };
 

@@ -55,7 +55,7 @@ export default createStore({
           const { filesize, link, ext } = res.data
           const size = `${(Number.parseInt(filesize, 10) / 1000000).toFixed(1)}Mb`
           
-          state.youtubeMedia[index].downloadButton.push({ filesize: size, link: link, ext: ext })
+          state.youtubeMedia[index].downloadButton.push({ filesize: size, link: `http://localhost:3000/api/file/${link}`, ext: ext })
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);
