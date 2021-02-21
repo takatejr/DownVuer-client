@@ -1,16 +1,9 @@
 import fs from "fs";
 
-const storage = [];
-
-export const accessToStorage = () => {
-  return storage;
-}
-
-export const generateCode = (lenght) => {
+const generateCode = (lenght) => {
   let result = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
   const charactersLength = characters.length;
 
   for (let i = 0; i < length; i++) {
@@ -20,27 +13,40 @@ export const generateCode = (lenght) => {
   return result;
 };
 
-const deleteFromCodeStorage = (code, filePath) => {
-  setTimeout(() => {
-    const index = storage.findIndex((x) => x.code === code);
-    storage.splice(index, 1);
+export const codeService = () => {
+  const storage = [];
 
-    fs.download(filePath, (err) => {
-      if (err) {
-        console.error(err + filePath);
-      }
-    });
-  }, 7200);
+  const getStorage = () => {
+    return storage;
+  };
+
+  const deleteFromCodeStorage = (code, filePath) => {
+    setTimeout(() => {
+      const index = storage.findIndex((x) => x.code === code);
+      storage.splice(index, 1);
+
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error(err + filePath);
+        }
+      });
+    }, 7200);
+  };
+
+  const addToStorage = (outputTitle, filePath) => {
+    const code = generateCode(32);
+    const payload = { code: code, path: outputTitle };
+
+    storage.push(payload);
+    deleteFromCodeStorage(code, filePath);
+
+    return code;
+  };
+
+  return {
+    getStorage,
+    addToStorage
+  }
 };
 
-export const addToStorage = (outputTitle, filePath) => {
-  const code = generateCode(32);
-  const payload = { code: code, path: outputTitle };
-
-  storage.push(payload)
-  deleteFromCodeStorage(code, filePath);
-
-  return code;
-};
-
-export { addToStorage, accessToStorage };
+export { codeService };

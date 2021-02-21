@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import youtubedl from "youtube-dl";
-import { addToCodeStorage } from "../services/code.service.js";
+import { codeService } from "../services/code.service.js";
 
 const partialDownload = async (req, res) => {
   const url = req.body.url;
@@ -27,7 +27,7 @@ const partialDownload = async (req, res) => {
     video.on("end", () => {
       try {
         const filePath = path.join(`/DownVuer/Vue/src/Node/${outputTitle}`);
-        const code = addToCodeStorage(outputTitle, filePath);
+        const code = codeService().addToStorage(outputTitle, filePath);
 
         res.setHeader("Content-Type", "application/json");
         res.status(200).send({

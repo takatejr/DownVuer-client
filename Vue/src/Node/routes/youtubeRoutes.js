@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { playlistDownload } from "../controllers/playlistDownload.js";
-import { singleDownload } from "../controllers/singleDownload.js";
-import { partialDownload } from "../controllers/partialDownload.js";
+
+import { playlistDownload } from "../controllers/downloadHandler/playlistDownload.js";
+import { singleDownload } from "../controllers/downloadHandler/singleDownload.js";
+import { partialDownload } from "../controllers/downloadHandler/partialDownload.js";
+
+import { sendFile } from "../controllers/fileHandler/sendFile.js";
+import { deleteFile } from "../controllers/fileHandler/deleteFile.js";
+
 import { getInfo } from "../controllers/getInfo.js";
-import { sendFile } from "../controllers/sendFile.js";
-import { deleteFile } from "../controllers/deleteFile.js";
 
 export const youtubeRoute = Router();
 
@@ -16,6 +19,9 @@ youtubeRoute.post("/single", singleDownload);
 
 /* file */
 
-youtubeRoute.post("/file/info", getInfo);
 youtubeRoute.get("/file/:id", sendFile);
 youtubeRoute.delete("/file/:id", deleteFile);
+
+/* info */
+
+youtubeRoute.post("/file/info", getInfo);
