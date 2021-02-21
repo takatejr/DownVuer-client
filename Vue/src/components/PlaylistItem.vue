@@ -1,22 +1,12 @@
 <template>
   <div>
     <div v-for="(item, index) in youtubeMedia" :key="index" class="download">
-      <p class="title">
+      <span class="title">
         {{ item.details.title }}
-      </p>
+      </span>
       <div class="media">
         <img class="img" :src="item.details.thumbnail" alt="thumbnail" />
         <p class="desc">{{ item.details.description }}</p>
-      </div>
-      <div class="buttons" v-if="item.path !== ''">
-        <audio controls="true" v-once>
-          <source type="audio/mpeg" :src="`../Node/` + `${item.path}`" />
-        </audio>
-        <a
-          class="button is-small is-1 is-offset-1 btn"
-          @click="deleteItem(index)"
-          >Delete</a
-        >
       </div>
       <label for="format" class="is-2 label">Media format</label>
       <select
@@ -30,7 +20,7 @@
         <option
           v-for="format in item.formats"
           :key="format.format"
-          v-bind:value="format.format"
+          v-bind:value="format"
         >
           {{ format.text }} - {{ format.type }} -
           {{ format.filesize }}
@@ -43,12 +33,14 @@
       >
         Submit
       </button>
+      <button @click="get()">download</button>
     </div>
   </div>
 </template>
 
 <script>
 import store from "../store/index";
+import axios from "axios";
 
 export default {
   name: "PlaylistItem",
@@ -68,7 +60,19 @@ export default {
     },
 
     downloadMedia(format, index, url) {
-      store.dispatch("downloadMedia", { format, index, url })
+      console.log(format, index, url)
+      store.dispatch("downloadMedia", { format, index, url });
+    },
+
+    get() {
+      axios
+        .get("http://localhost:3000/api/iddd")
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
     },
   },
   setup() {

@@ -1,15 +1,14 @@
 import fs from "fs";
 import youtubedl from "youtube-dl";
-import path from "path";
 
 const partialDownload = async (req, res) => {
   const url = req.body.url;
-  const format = req.body.format;
-  console.log(url, format);
+  const format = req.body.format.format;
+  const ext = req.body.format.text;
   
   youtubedl.getInfo(url, function(err, info) {
     let downloaded = 0;
-    const outputTitle = `${info.title}.mp3`.replace(/\s/g, '');
+    const outputTitle = `${info.title}.${ext}`
     const video = youtubedl(url, [`--format=${format}`], { start: downloaded });
 
     video.on("info", function(info) {
@@ -33,15 +32,6 @@ const partialDownload = async (req, res) => {
       } catch (error) {
         res.send({ message: error });
       }
-    });
-
-    video.on("end", () => {
-      fs.unlink(filePath, (err) => {
-        console.log("usuwam");
-        if (err) {
-          console.error(err);
-        }
-      });
     });
   });
 };

@@ -49,10 +49,10 @@ export default createStore({
     },
 
     downloadMedia({ state }, info) {
-      const { format, index, url } = info
+      const { format, type, url, index } = info
       
       axios
-        .post('http://localhost:3000/api/partial', { url: url, format: format })
+        .post('http://localhost:3000/api/partial', { url: url, format: format, type: type })
         .then((res: AxiosResponse) => {
           state.youtubeMedia[index].path = res.data
         })
