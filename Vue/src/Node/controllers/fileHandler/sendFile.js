@@ -1,17 +1,16 @@
-import path from "path";
-import { codeService } from "../services/code.service.js";
+import pathTo from "path";
+import { codeService } from "../../../Node/services/code.service.js";
 
 const sendFile = async (req, res) => {
-  const access = codeService()
+  const { path } = codeService()
     .getStorage()
-    .filter(x => x.code === req.params.code);
+    .find((x) => x.code === req.params.id);
 
-  if (access) {
-    const title = access.title;
-    const filePath = path.join(`/DownVuer/Vue/src/Node/${title}`);
+  if (path) {
+    const filePath = pathTo.join(`${path}`);
 
-    res.download(filePath, err => {
-      console.error(err + filePath);
+    res.download(filePath, (err) => {
+      console.error(err);
     });
   } else {
     res.status(401).send("Unauthorize connection");

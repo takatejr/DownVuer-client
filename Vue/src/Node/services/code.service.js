@@ -1,12 +1,14 @@
 import fs from "fs";
 
-const generateCode = (lenght) => {
+const storage = [];
+
+const generateCode = (l) => {
   let result = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < l; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
 
@@ -14,12 +16,6 @@ const generateCode = (lenght) => {
 };
 
 export const codeService = () => {
-  const storage = [];
-
-  const getStorage = () => {
-    return storage;
-  };
-
   const deleteFromCodeStorage = (code, filePath) => {
     setTimeout(() => {
       const index = storage.findIndex((x) => x.code === code);
@@ -30,7 +26,7 @@ export const codeService = () => {
           console.error(err + filePath);
         }
       });
-    }, 7200);
+    }, 7200000);
   };
 
   const addToStorage = (outputTitle, filePath) => {
@@ -43,10 +39,12 @@ export const codeService = () => {
     return code;
   };
 
+  const getStorage = () => {
+    return storage;
+  };
+
   return {
     getStorage,
-    addToStorage
-  }
+    addToStorage,
+  };
 };
-
-export { codeService };

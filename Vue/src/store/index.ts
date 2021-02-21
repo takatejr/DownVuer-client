@@ -26,7 +26,7 @@ export default createStore({
 
     setInfo({ state }, url) {
       axios
-        .post("http://localhost:3000/api/info", {
+        .post("http://localhost:3000/api/file/info", {
           url: url
         })
         .then((res: AxiosResponse) => {
@@ -53,6 +53,7 @@ export default createStore({
         .post('http://localhost:3000/api/partial', { url: url, format: format})
         .then((res: AxiosResponse) => {
           const { filesize, link, ext } = res.data
+          console.log(res.data)
           const size = `${(Number.parseInt(filesize, 10) / 1000000).toFixed(1)}Mb`
           
           state.youtubeMedia[index].downloadButton.push({ filesize: size, link: `http://localhost:3000/api/file/${link}`, ext: ext })
