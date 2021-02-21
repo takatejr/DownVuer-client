@@ -18,13 +18,26 @@ export default createStore({
     }],
   },
   mutations: {
+    setInfo(state, payload) {
+      state.youtubeMedia.push(payload)
+    },
+
+    downloadMedia(state, payload) {
+      const { index, ...rest } = payload
+      state.youtubeMedia[index].downloadButton.push(rest)
+      console.log(state.youtubeMedia[index].downloadButton)
+    },
+
+    deleteMedia(state, index) {
+      state.youtubeMedia.splice(index, 1)
+    }
   }, //commit
   actions: {
     isDisabled({ state }, boolean) {
       state.isDisabled = boolean
     },
 
-    setInfo({ state }, url) {
+    setInfo({ commit }, url) {
       axios
         .post("http://localhost:3000/api/file/info", {
           url: url
@@ -39,28 +52,32 @@ export default createStore({
             }
           })
 
-          state.youtubeMedia.push({ url: url, path: '', details: res.data, formats: formats, downloadButton: [] })
+          commit('setInfo', { url: url, path: '', details: res.data, formats: formats, downloadButton: [] })
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);
         });
     },
 
-    downloadMedia({ state }, info) {
+    downloadMedia({ commit }, info) {
       const { format, url, index } = info
-      
+
       axios
-        .post('http://localhost:3000/api/partial', { url: url, format: format})
+        .post('http://localhost:3000/api/partial', { url: url, format: format })
         .then((res: AxiosResponse) => {
           const { filesize, link, ext } = res.data
           console.log(res.data)
           const size = `${(Number.parseInt(filesize, 10) / 1000000).toFixed(1)}Mb`
-          
-          state.youtubeMedia[index].downloadButton.push({ filesize: size, link: `http://localhost:3000/api/file/${link}`, ext: ext })
+
+          commit('downloadMedia', { filesize: size, link: `http://localhost:3000/api/file/${link}`, ext: ext, index: index })
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);
         });
+    },
+
+    deleteMedia({ commit }, index) {
+      commit('deleteMedia', index)
     }
 
   }, //dispatch

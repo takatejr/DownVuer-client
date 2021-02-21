@@ -40,8 +40,8 @@
       :key="link"
     >
       <a :href="link" class="button">Download {{ ext }} {{ filesize }} </a>
-      <a @click="deleteItem(index, link)" class="button"
-        >Download {{ ext }} {{ filesize }}
+      <a @click="deleteMedia(index, link)" class="button"
+        >Delete {{ ext }} {{ filesize }}
       </a>
     </div>
   </div>
@@ -63,10 +63,13 @@ export default {
     };
   },
   methods: {
-    deleteItem(index, link) {
+    deleteMedia(index, link) {
       return axios
-        .delete(`http://localhost:3000/api/file/${link}`)
+        .delete(link, {
+          data: { link: link },
+        })
         .then((res) => {
+          store.dispatch("deleteMedia", index);
           return store.state.youtubeMedia.splice(index, 1);
         });
     },
