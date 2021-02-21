@@ -34,8 +34,15 @@
         Submit
       </button>
     </div>
-    <div class="download" v-for="btn in item.downloadButton" :key="btn">
-      <a :href="btn.link" class="button">Download {ext} {filesize} </a>
+    <div
+      class="download"
+      v-for="{ link, ext, filesize } in item.downloadButton"
+      :key="link"
+    >
+      <a :href="link" class="button">Download {{ ext }} {{ filesize }} </a>
+      <a @click="deleteItem(index, link)" class="button"
+        >Download {{ ext }} {{ filesize }}
+      </a>
     </div>
   </div>
 </template>
@@ -56,28 +63,16 @@ export default {
     };
   },
   methods: {
-    deleteItem(index) {
-      // axios.post('http://localhost:3000/api/file/:id')
-      return store.state.youtubeMedia.splice(index, 1);
+    deleteItem(index, link) {
+      return axios
+        .delete(`http://localhost:3000/api/file/${link}`)
+        .then((res) => {
+          return store.state.youtubeMedia.splice(index, 1);
+        });
     },
 
     downloadMedia(format, index, url) {
       store.dispatch("downloadMedia", { format, index, url });
-    },
-
-    awg() {
-      console.log(store.state.youtubeMedia);
-    },
-
-    get() {
-      axios
-        .get("http://localhost:3000/api/iddd")
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-        });
     },
   },
   setup() {
