@@ -13,7 +13,8 @@ export default createStore({
       url: '',
       path: '',
       details: {},
-      formats: []
+      formats: [],
+      downloadButton: []
     }],
   },
   mutations: {
@@ -24,24 +25,21 @@ export default createStore({
     },
 
     setInfo({ state }, url) {
-      const path = "emptyForNow";
-      const youtubeURL = url
       axios
         .post("http://localhost:3000/api/info", {
           url: url
         })
         .then((res: AxiosResponse) => {
-
           const formats = res.data.formats.map((e: any) => {
             return {
               format: e.format_id,
               type: e.format.split(' ')[2] + e.format.split(' ')[3],
-              filesize: `${(Number(e.filesize) / 1000000).toFixed(1)}Mb`,
+              filesize: `${(Number.parseInt(e.filesize, 10) / 1000000).toFixed(1)}Mb`,
               text: e.format.split(' ')[2] === "audio" ? "mp3" : "mp4",
             }
           })
-          console.log(url)
-          state.youtubeMedia.push({ url: url, path: path, details: res.data, formats: formats })
+
+          state.youtubeMedia.push({ url: url, path: '', details: res.data, formats: formats, downloadButton: [] })
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);
@@ -49,12 +47,15 @@ export default createStore({
     },
 
     downloadMedia({ state }, info) {
-      const { format, type, url, index } = info
+      const { format, url, index } = info
       
       axios
-        .post('http://localhost:3000/api/partial', { url: url, format: format, type: type })
+        .post('http://localhost:3000/api/partial', { url: url, format: format})
         .then((res: AxiosResponse) => {
-          state.youtubeMedia[index].path = res.data
+          const { filesize, link, ext } = res.data
+          const size = `${(Number.parseInt(filesize, 10) / 1000000).toFixed(1)}Mb`
+          
+          state.youtubeMedia[index].downloadButton.push({ filesize: size, link: link, ext: ext })
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);

@@ -1,6 +1,18 @@
 import fs from "fs";
 import youtubedl from "youtube-dl";
 
+const generateCode = length => {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+};
+
 const partialDownload = async (req, res) => {
   const url = req.body.url;
   const format = req.body.format.format;
@@ -24,8 +36,10 @@ const partialDownload = async (req, res) => {
 
     video.on("end", () => {
       try {
-        res.setHeader("Content-Type", "text/plain");
-        res.status(200).send(outputTitle);
+        const code = generateCode(32)
+        const aa = [{code: code, path: outputTitle}]
+        res.setHeader("Content-Type", "application/json");
+        res.status(200).send({filesize: fs.stat(outputTitle).size, link: `${code}`, ext: ext});
         console.log("finished downloading, streaming now!");
         console.log("");
 
