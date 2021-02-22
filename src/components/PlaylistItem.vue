@@ -49,7 +49,6 @@
 
 <script>
 import store from "../store/index";
-import axios from "axios";
 
 export default {
   name: "PlaylistItem",
@@ -64,14 +63,7 @@ export default {
   },
   methods: {
     deleteMedia(index, link) {
-      return axios
-        .delete(link, {
-          data: { link: link },
-        })
-        .then((res) => {
-          store.dispatch("deleteMedia", index);
-          return store.state.youtubeMedia.splice(index, 1);
-        });
+      store.dispatch("deleteMedia", { link: link, index: index });
     },
 
     downloadMedia(format, index, url) {
