@@ -43,7 +43,6 @@ export default createStore({
           url: url
         })
         .then((res: AxiosResponse) => {
-          console.log(res)
           const isPlaylist = res.data.formats !== true ? true : false;
 
           if (isPlaylist) {
@@ -57,7 +56,7 @@ export default createStore({
                 }
               })
 
-                const urlOfPlaylistItem = data.url
+              const urlOfPlaylistItem = data.url
               commit('setInfo', { url: urlOfPlaylistItem, path: '', details: data, formats: formats, downloadButton: [] })
             })
           } else {
@@ -72,8 +71,6 @@ export default createStore({
 
             commit('setInfo', { url: url, path: '', details: res.data, formats: formats, downloadButton: [] })
           }
-
-          console.log(this.state.youtubeMedia)
         })
         .catch((error: unknown) => {
           console.error("There was an error!", error);
