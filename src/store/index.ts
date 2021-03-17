@@ -25,7 +25,6 @@ export default createStore({
     downloadMedia(state, payload) {
       const { index, ...rest } = payload
       state.youtubeMedia[index].downloadButton.push(rest)
-      console.log(state.youtubeMedia[index].downloadButton)
     },
 
     deleteMedia(state, index) {
@@ -95,7 +94,8 @@ export default createStore({
 
     deleteMedia({ commit }, payload) {
       const { link, index } = payload;
-      return axios
+
+      axios
         .delete(link, {
           data: { link: link },
         })

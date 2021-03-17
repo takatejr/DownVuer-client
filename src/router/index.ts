@@ -20,12 +20,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/Youtube.vue")
   },
-  {
-    path: "/spotify",
-    name: "Spotify",
-    component: () =>
-      import("../views/Spotify.vue")
-  }
 ];
 
 const router = createRouter({

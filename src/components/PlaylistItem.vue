@@ -16,7 +16,7 @@
         v-model="formValues.selectedFormat"
         :disabled="formValues.isDisabled"
       >
-        <option disabled>Choose format</option>
+        <option hidden>Choose format</option>
         <option
           v-for="format in item.formats"
           :key="format.format"
@@ -56,8 +56,7 @@ export default {
     return {
       youtubeMedia: store.state.youtubeMedia,
       formValues: {
-        selectedFormat: "",
-        isDisabled: false,
+        selectedFormat: ""
       },
     };
   },
@@ -89,7 +88,7 @@ export default {
     rgba(255, 0, 0, 0.25) 100%
   );
   height: 30vh;
-  width: 90%;
+  width: 75%;
   border: 1px solid black;
 }
 
